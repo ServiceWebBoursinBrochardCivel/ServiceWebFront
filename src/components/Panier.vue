@@ -1,9 +1,9 @@
 <template>
   <div class="beerlist">
-    <h1>Liste de nos bières</h1>
+    <h1>Votre Panier</h1>
     <br>
 
-    <ul class="grid">
+    <ul class="list">
       <li v-for="beer in beers" :key="beer.id">
           <div class="card">
             <router-link :to="'/beer/'+beer.id"><img :src="beer.image" alt=""></router-link>
@@ -34,7 +34,6 @@ export default {
   name: 'BeerList',
   data(){
     return{
-      beers :[],
       beersPanier :[]
     } 
   },
@@ -59,38 +58,14 @@ export default {
         }catch(e){
           console.log(e)
         }
+        
         if(localStorage.getItem(beer.id)==null){
           localStorage.setItem(beer.id,1);
-
-           axios
-            .post('http://127.0.0.1:5000/panier',{
-              beer_id:beer.id,
-              user_id:1,
-              quantite:localStorage.getItem(beer.id)
-            })
-            .then(res => {
-                console.log(res)
-            })
-            .catch( error=>{
-              alert("Erreur de changement de stock PO.")
-            })
-
         }else{
           localStorage.setItem(beer.id,parseInt(localStorage.getItem(beer.id))+1);
-
-          axios
-            .put('http://127.0.0.1:5000/panier/'+beer.id+'/1',{
-              beer_id:beer.id,
-              user_id:1,
-              quantite:localStorage.getItem(beer.id)
-            })
-            .then(res => {
-                console.log(res)
-            })
-            .catch( error=>{
-              alert("Erreur de changement de stock P.")
-            })
         }
+        
+        
     },
     addStock(beer){
       try{
@@ -115,30 +90,8 @@ export default {
 
         if(parseInt(localStorage.getItem(beer.id))-1==0){
           localStorage.removeItem(beer.id);
-
-          axios
-            .delete('http://127.0.0.1:5000/panier/'+beer.id+'/1')
-            .then(res => {
-                console.log(res)
-            })
-            .catch( error=>{
-              alert(error)
-            })
         }else{
           localStorage.setItem(beer.id,parseInt(localStorage.getItem(beer.id))-1);
-
-          axios
-            .put('http://127.0.0.1:5000/panier/'+beer.id+'/1',{
-              beer_id:beer.id,
-              user_id:1,
-              quantite:localStorage.getItem(beer.id)
-            })
-            .then(res => {
-                console.log(res)
-            })
-            .catch( error=>{
-              alert("Erreur de Changement de données P2.")
-            }) 
         }
     },
     isInLocalStorage(beer){

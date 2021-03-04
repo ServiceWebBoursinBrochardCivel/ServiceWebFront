@@ -3,7 +3,8 @@
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
-      <router-link to="/beers">Beers </router-link>    
+      <router-link to="/beers">Beers </router-link> |
+      <router-link to="/panier"> <img src="@/assets/shopping-cart.png" alt=""> </router-link>  
     </div>
     <router-view/>
   </div>
@@ -31,6 +32,10 @@
   color: #42b983;
 }
 
+img{
+  height: 10%;
+  width: auto;
+}
 ul.grid{
     list-style: none;
     width: 100%;

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import BeerList from '../views/BeerListView.vue'
 import BeerDetails from '../views/BeerDetails.vue'
+import Panier from '../views/PanierView.vue'
 
 Vue.use(VueRouter)
 
@@ -29,6 +30,11 @@ const routes = [
     path:'/beer/:id',
     name :"BeerDetails",
     component : BeerDetails
+  },
+  {
+    path:'/panier',
+    name :"Panier",
+    component : Panier
   },
 ]
 
