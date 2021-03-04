@@ -2,7 +2,8 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/about">About</router-link> |
+      <router-link to="/beers">Beers </router-link>    
     </div>
     <router-view/>
   </div>
@@ -28,5 +29,44 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+ul.grid{
+    list-style: none;
+    width: 100%;
+    text-align: left;
+}
+
+li{
+  list-style: none;
+}
+
+ul.grid li{
+    padding: 2px;
+    float:left;
+    width: 20%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 3%;
+}
+
+.card {
+  /* Add shadows to create the "card" effect */
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Add some padding inside the card container */
+.container {
+  padding: 2px 16px;
+}
+
+.card button img{
+  width: 100%;
 }
 </style>
