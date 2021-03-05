@@ -49,7 +49,6 @@ li{
 ul.grid li{
     padding: 2px;
     float:left;
-    width: 20%;
     margin-left: 5%;
     margin-right: 5%;
     margin-top: 3%;
@@ -59,6 +58,7 @@ ul.grid li{
   /* Add shadows to create the "card" effect */
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
+  height: 300px;
 }
 
 /* On mouse-over, add a deeper shadow */
@@ -71,7 +71,12 @@ ul.grid li{
   padding: 2px 16px;
 }
 
-.card button img{
-  width: 100%;
+.card img{
+  width: auto;
+  height: 100px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  
 }
 </style>

@@ -10,7 +10,7 @@
             <div class="container">
               <h4>{{beer.name}}</h4>
               <div>
-                <div v-if="beer.stock>0">
+                <div v-if="beer.stock - panierBeer(beer)>0">
                   <button @click="removeStock(beer)">Ajouter au panier</button>
                 </div>
                 <div v-if="isInLocalStorage(beer.id)">
@@ -136,9 +136,4 @@ export default {
 </script>
 
 <style scoped>
-
-img {
-  max-height: auto;
-  width: 100px;
-}
 </style>

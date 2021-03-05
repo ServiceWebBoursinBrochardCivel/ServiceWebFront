@@ -2,20 +2,20 @@
   <div class="beerlist">
     <h1>Votre Panier</h1>
     <br>
-    <ul class="list">
-      <li v-for="beer in beers" :key="beer.id">
-          <div class="card">
+    <table class="list">
+      <tr v-for="beer in beers" :key="beer.id">
+          <td class="item">
             <router-link :to="'/beer/'+beer.id"><img :src="beer.image" alt=""></router-link>
-            <div class="container">
+            <span class="cpntainer">
               <h4> Bière : {{beer.name}}</h4>
               <p>Quantité dans votre panier de {{beer.name}} : {{quantiteBeer(beer)}}</p>
-            </div>
-          </div>
-      </li>
-    </ul>
+            </span>
+          </td>
+      </tr>
+    </table>
 
 
-    <div v-if="beers.length!=0">
+    <div v-if="beers.length!=0" class="buttons">
 
       <button @click="annulerPanier()">Annuler la commande</button>
       <button @click="validerPanier()">Valider votre panier</button>
@@ -131,8 +131,27 @@ export default {
 
 <style scoped>
 
-img {
-  max-height: auto;
-  width: 100px;
+.beerlist{
+  text-align: center;
+  display: grid;
+  grid-template-rows: 3;
+}
+.list{
+  text-align: center;
+  margin: auto;
+  grid-row: 2;
+}
+
+.buttons{
+  margin-top: 1%;
+  grid-row: 3;
+}
+
+img{
+   width: auto;
+  height: 100px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>

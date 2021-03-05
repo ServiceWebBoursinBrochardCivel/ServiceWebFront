@@ -38,7 +38,11 @@ export default {
 </script>
 
 <style scoped>
-a{
-    color: black;
+img{
+    width: auto;
+    height: 300px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 </style>
