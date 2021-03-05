@@ -15,7 +15,7 @@
                   <button @click="addStock(beer)">Retirer du panier</button>
                 </div>
                 <p> Stock restant : {{beer.stock}}</p>
-                <p>Votre pannier : {{stockBeer(beer)}}</p>
+                <p>Votre panier : {{stockBeer(beer)}}</p>
               </div>
               <div v-if="beer.stock==0">
                 <p>Plus de stocks</p>
