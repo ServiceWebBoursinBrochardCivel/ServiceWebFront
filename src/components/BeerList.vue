@@ -9,16 +9,15 @@
             <router-link :to="'/beer/'+beer.id"><img :src="beer.image" alt=""></router-link>
             <div class="container">
               <h4>{{beer.name}}</h4>
-              <div v-if="beer.stock>0">
-                <button @click="removeStock(beer)">Ajouter au panier</button>
+              <div>
+                <div v-if="beer.stock>0">
+                  <button @click="removeStock(beer)">Ajouter au panier</button>
+                </div>
                 <div v-if="isInLocalStorage(beer.id)">
                   <button @click="addStock(beer)">Retirer du panier</button>
                 </div>
-                <p> Stock restant : {{beer.stock}}</p>
-                <p>Votre panier : {{stockBeer(beer)}}</p>
-              </div>
-              <div v-if="beer.stock==0">
-                <p>Plus de stocks</p>
+                <p> Stock restant : {{beer.stock - panierBeer(beer)}}</p>
+                <p>Votre panier : {{panierBeer(beer)}}</p>
               </div>
             </div>
           </div>
@@ -40,25 +39,7 @@ export default {
   },
   methods:{
     removeStock(beer){
-      try{
-        var index =this.beers.indexOf(beer);
-        axios
-        .put('http://127.0.0.1:5000/beer/'+beer.id,{
-          name:beer.name,
-          percentageAlcohol:beer.percentageAlcohol,
-          category:beer.category,
-          stock:beer.stock-1,
-          image:beer.image
-        })
-        .then(res => {
-            this.beers[index].stock = res.data.stock
-        })
-        .catch( error=>{
-          alert("Erreur de chargement des données.")
-        })
-        }catch(e){
-          console.log(e)
-        }
+
         if(localStorage.getItem(beer.id)==null){
           localStorage.setItem(beer.id,1);
 
@@ -69,7 +50,8 @@ export default {
               quantite:localStorage.getItem(beer.id)
             })
             .then(res => {
-                console.log(res)
+              this.$forceUpdate()
+                
             })
             .catch( error=>{
               alert("Erreur de changement de stock PO.")
@@ -85,7 +67,8 @@ export default {
               quantite:localStorage.getItem(beer.id)
             })
             .then(res => {
-                console.log(res)
+              this.$forceUpdate()
+                
             })
             .catch( error=>{
               alert("Erreur de changement de stock P.")
@@ -93,33 +76,14 @@ export default {
         }
     },
     addStock(beer){
-      try{
-        var index =this.beers.indexOf(beer);
-        axios
-        .put('http://127.0.0.1:5000/beer/'+beer.id,{
-          name:beer.name,
-          percentageAlcohol:beer.percentageAlcohol,
-          category:beer.category,
-          stock:beer.stock+1,
-          image:beer.image
-        })
-        .then(res => {
-            this.beers[index].stock = res.data.stock
-        })
-        .catch( error=>{
-          alert("Erreur de chargement des données.")
-        })
-        }catch(e){
-          console.log(e)
-        }
-
         if(parseInt(localStorage.getItem(beer.id))-1==0){
           localStorage.removeItem(beer.id);
 
           axios
             .delete('http://127.0.0.1:5000/panier/'+beer.id+'/1')
             .then(res => {
-                console.log(res)
+              this.$forceUpdate()
+                
             })
             .catch( error=>{
               alert(error)
@@ -134,7 +98,8 @@ export default {
               quantite:localStorage.getItem(beer.id)
             })
             .then(res => {
-                console.log(res)
+              this.$forceUpdate()
+               
             })
             .catch( error=>{
               alert("Erreur de Changement de données P2.")
@@ -147,10 +112,12 @@ export default {
       }
       return false
     },
-    stockBeer(beer){
+    panierBeer(beer){
+      if(localStorage.getItem(beer.id)==null){
+        return 0
+      }
       return localStorage.getItem(beer.id);
     }
-
   },
   beforeMount(){
     try{

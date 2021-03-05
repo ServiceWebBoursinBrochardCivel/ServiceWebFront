@@ -13,6 +13,17 @@
           </div>
       </li>
     </ul>
+
+
+    <div v-if="beers.length!=0">
+
+      <button @click="annulerPanier()">Annuler la commande</button>
+      <button @click="validerPanier()">Valider votre panier</button>
+    </div>
+
+    <div v-if="beers.length==0">
+      <h3>Vous n'avez aucun élément dans votre panier. Aller en ajouter sur la page <router-link to="/beers">Beers</router-link> </h3>
+    </div>
     
   </div>
 </template>
@@ -31,6 +42,61 @@ export default {
     quantiteBeer(beer){
       var index = this.beers.indexOf(beer)
       return this.beersPanier[index].quantite
+    },
+     validerPanier(){
+      let current_beer=null;
+      //modification du stock
+      //vider panier
+      //vider localStorage
+      this.beers.forEach( async beer => {
+        
+        await axios
+        .get('http://127.0.0.1:5000/beer/'+beer.id).
+        then(res => {
+            current_beer = res.data
+        })
+        .catch( error=>{
+          alert(error)
+        })
+
+        if(current_beer.stock<localStorage.getItem(beer.id)){
+          alert("Le stock restant est désormais inférieur à la quantite de votre panier pour la bière "+beer.name);
+          return;
+        }
+        
+        axios
+        .put('http://127.0.0.1:5000/beer/'+beer.id,{
+          name:beer.name,
+          percentageAlcohol:beer.percentageAlcohol,
+          category:beer.category,
+          stock:beer.stock-localStorage.getItem(beer.id),
+          image:beer.image
+        })
+        .catch( error=>{
+          alert(error)
+        })
+
+        localStorage.removeItem(beer.id);
+
+        axios
+          .delete('http://127.0.0.1:5000/panier/'+beer.id+'/1')
+          .catch( error=>{
+            alert(error)
+          })
+      });
+      window.location.reload()
+    },
+    annulerPanier(){
+      this.beers.forEach(beer => {
+        localStorage.removeItem(beer.id);
+
+        axios
+          .delete('http://127.0.0.1:5000/panier/'+beer.id+'/1')
+          .catch( error=>{
+            alert(error)
+          })
+      });
+      window.location.reload()
     }
   },
   async beforeMount(){
