@@ -2,11 +2,11 @@
   <div class="beerlist">
     <h1>Votre Panier</h1>
     <br>
-    <table class="list">
+    <table class="grid">
       <tr v-for="beer in beers" :key="beer.id">
-          <td class="item">
+          <td class="card">
             <router-link :to="'/beer/'+beer.id"><img :src="beer.image" alt=""></router-link>
-            <span class="cpntainer">
+            <span class="container">
               <h4> Bière : {{beer.name}}</h4>
               <p>Quantité dans votre panier de {{beer.name}} : {{quantiteBeer(beer)}}</p>
             </span>
@@ -136,15 +136,10 @@ export default {
   display: grid;
   grid-template-rows: 3;
 }
-.list{
-  text-align: center;
-  margin: auto;
-  grid-row: 2;
-}
+
 
 .buttons{
   margin-top: 1%;
-  grid-row: 3;
 }
 
 img{
