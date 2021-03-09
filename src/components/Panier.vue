@@ -35,7 +35,12 @@ export default {
   data(){
     return{
       beersPanier :[],
-      beers :[]
+      beers :[],
+      config : {
+        headers : {
+            token:localStorage.getItem(token)
+        }
+      }
     } 
   },
   methods:{
@@ -49,9 +54,10 @@ export default {
       //vider panier
       //vider localStorage
       this.beers.forEach( async beer => {
+
         
         await axios
-        .get('http://127.0.0.1:5000/beer/'+beer.id).
+        .get('http://127.0.0.1:5000/beer/'+beer.id,this.config).
         then(res => {
             current_beer = res.data
         })
@@ -71,7 +77,7 @@ export default {
           category:beer.category,
           stock:beer.stock-localStorage.getItem(beer.id),
           image:beer.image
-        })
+        },this.config)
         .catch( error=>{
           alert(error)
         })
@@ -79,7 +85,7 @@ export default {
         localStorage.removeItem(beer.id);
 
         axios
-          .delete('http://127.0.0.1:5000/panier/'+beer.id+'/1')
+          .delete('http://127.0.0.1:5000/panier/'+beer.id+'/1',this.config)
           .catch( error=>{
             alert(error)
           })
@@ -91,7 +97,7 @@ export default {
         localStorage.removeItem(beer.id);
 
         axios
-          .delete('http://127.0.0.1:5000/panier/'+beer.id+'/1')
+          .delete('http://127.0.0.1:5000/panier/'+beer.id+'/1',this.config)
           .catch( error=>{
             alert(error)
           })
@@ -101,7 +107,7 @@ export default {
   },
   async beforeMount(){
     try{
-      await axios.get('http://127.0.0.1:5000/panier/1')
+      await axios.get('http://127.0.0.1:5000/panier/1',this.config)
     .then(res => {
         this.beersPanier = res.data
     })
@@ -114,7 +120,7 @@ export default {
 
     this.beersPanier.forEach(item => {
       try{
-        axios.get('http://127.0.0.1:5000/beer/'+item.beer_id)
+        axios.get('http://127.0.0.1:5000/beer/'+item.beer_id,this.config)
       .then(res => {
           this.beers.push(res.data)
       })

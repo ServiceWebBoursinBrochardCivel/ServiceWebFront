@@ -20,13 +20,18 @@ import axios from 'axios';
 export default {
     data(){
         return{
-            beerDetail :{}
+            beerDetail :{},
+            config : {
+                headers : {
+                    token:localStorage.getItem(token)
+                }
+            }
         }
     },
     
     beforeMount(){
         axios
-        .get('http://127.0.0.1:5000/beer/'+this.$route.params.id).then(res=>{
+        .get('http://127.0.0.1:5000/beer/'+this.$route.params.id,this.config).then(res=>{
             this.beerDetail = res.data
         })
         .catch( error=>{
