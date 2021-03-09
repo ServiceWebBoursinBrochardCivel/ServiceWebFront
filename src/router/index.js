@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import BeerList from '../views/BeerListView.vue'
+import BeerDetails from '../views/BeerDetails.vue'
+import Panier from '../views/PanierView.vue'
 
 Vue.use(VueRouter)
 
@@ -17,7 +20,22 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+  },
+  {
+    path: '/beers',
+    name: 'Beers',
+    component: BeerList
+  },
+  {
+    path:'/beer/:id',
+    name :"BeerDetails",
+    component : BeerDetails
+  },
+  {
+    path:'/panier',
+    name :"Panier",
+    component : Panier
+  },
 ]
 
 const router = new VueRouter({
