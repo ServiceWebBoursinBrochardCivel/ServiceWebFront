@@ -52,12 +52,12 @@ export default {
                 pseudo: this.pseudo,
                 password: this.pwd
             }).then(response => {
-                console.log("Ah");
                 let token = response.data;
                 console.log(token);
                 localStorage.setItem("token", token);
                 this.$router.push({name:'Beers'})
             }).catch(error => {
+                alert("Identifiant ou mot de passe incorrect");
                 console.log(error)
             }).finally(()=> console.log("ok"));
         },
