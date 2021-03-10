@@ -1,10 +1,20 @@
 <template>
     <div class="login">
-            <label for="pseudo">Pseudo</label>
+        <br>
+        <h1>Login</h1>
+        <div class="form-groupe">
+            <label for="pseudo">Pseudo  </label>
             <input id="pseudo" type="text" v-model="pseudo" name="pseudo">
-            <label for="pwd">Mot de passe</label>
+        </div>
+        <br>
+        <div class="form-groupe">
+            <label for="pwd">Mot de passe  </label>
             <input id="pwd" type="password" v-model="pwd" name="pwd">
+        </div>
+        <br>
+        <div class="form-groupe">
             <button type="button" v-on:click="login()">Se connecter</button>
+        </div>
     </div>
 </template>
 
@@ -24,11 +34,14 @@ export default {
             this.errors = [];
             if(!this.pseudo){
                 this.errors.push("Pseudo manquant.");
+                alert("Pseudo manquant.")
             }else if(!this.checkPseudo(this.pseudo)){
                 this.errors.push("Identifiant ou mot de passe incorrect.");
+                alert("Identifiant ou mot de passe incorrect.")
             }
             if(!this.pwd){
                 this.errors.push("Mot de passe manquant.");
+                alert("Mot de passe manquant.")
             }
 
             if(this.errors.length){
@@ -43,6 +56,7 @@ export default {
                 let token = response.data;
                 console.log(token);
                 localStorage.setItem("token", token);
+                this.$router.push({name:'Beers'})
             }).catch(error => {
                 console.log(error)
             }).finally(()=> console.log("ok"));

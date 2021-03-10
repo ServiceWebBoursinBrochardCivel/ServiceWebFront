@@ -38,7 +38,7 @@ export default {
       beers :[],
       config : {
         headers : {
-            token:localStorage.getItem(token)
+            token:localStorage.getItem("token")
         }
       }
     } 

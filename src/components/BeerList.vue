@@ -37,7 +37,7 @@ export default {
       beersPanier :[],
       config : {
           headers : {
-              token:"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MTUzODQxMzZ9.eEU2ptoWFL2n0ZA0LeASTm-zajlzZ53TJ82CKCbMF4U"
+              token:localStorage.getItem("token")
           }
       }
     } 

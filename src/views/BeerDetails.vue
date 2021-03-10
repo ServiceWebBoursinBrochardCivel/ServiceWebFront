@@ -1,10 +1,10 @@
 <template>
     <div>
-        <div>
-            <h1>{{beerDetail.name}}</h1>
+        <div class="head">
+            <h1>{{beerDetail.name}}  <router-link to="/beers"> <img src="@/assets/closeWindow.png" alt=""></router-link> </h1>
         </div>
 
-        <div>
+        <div class="image">
             <img :src="beerDetail.image" alt="">
         </div>
 
@@ -23,7 +23,7 @@ export default {
             beerDetail :{},
             config : {
                 headers : {
-                    token:localStorage.getItem(token)
+                    token:localStorage.getItem("token")
                 }
             }
         }
@@ -43,9 +43,18 @@ export default {
 </script>
 
 <style scoped>
-img{
+
+.head img{
     width: auto;
-    height: 300px;
+    height: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.image img{
+    width: auto;
+    height: 400px;
     display: block;
     margin-left: auto;
     margin-right: auto;
