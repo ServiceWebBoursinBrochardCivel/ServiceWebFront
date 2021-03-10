@@ -7,7 +7,7 @@
           <td class="card">
             <router-link :to="'/beer/'+beer.id"><img :src="beer.image" alt=""></router-link>
             <span class="container">
-              <h4> Bière : {{beer.name}}</h4>
+              <h4>Bière : {{beer.name}}</h4>
               <p>Quantité dans votre panier de {{beer.name}} : {{quantiteBeer(beer)}}</p>
             </span>
           </td>
@@ -30,6 +30,8 @@
 
 <script>
 import axios from 'axios';
+import VueJwtDecode from 'vue-jwt-decode'
+
 export default {
   name: 'BeerList',
   data(){
@@ -50,12 +52,9 @@ export default {
     },
      validerPanier(){
       let current_beer=null;
-      //modification du stock
-      //vider panier
-      //vider localStorage
+      let token = VueJwtDecode.decode(localStorage.getItem("token"));
+    
       this.beers.forEach( async beer => {
-
-        
         await axios
         .get('http://127.0.0.1:5000/beer/'+beer.id,this.config).
         then(res => {
@@ -64,6 +63,8 @@ export default {
         .catch( error=>{
           alert(error)
         })
+
+        console.log(current_beer.stock-localStorage.getItem(beer.id))
 
         if(current_beer.stock<localStorage.getItem(beer.id)){
           alert("Le stock restant est désormais inférieur à la quantite de votre panier pour la bière "+beer.name);
@@ -85,29 +86,39 @@ export default {
         localStorage.removeItem(beer.id);
 
         axios
-          .delete('http://127.0.0.1:5000/panier/'+beer.id+'/1',this.config)
+          .delete('http://127.0.0.1:5000/panier/'+beer.id+'/'+token["user_id"],this.config)
           .catch( error=>{
             alert(error)
           })
       });
-      window.location.reload()
+      this.beers= [];
     },
     annulerPanier(){
+      let token = VueJwtDecode.decode(localStorage.getItem("token"));
       this.beers.forEach(beer => {
         localStorage.removeItem(beer.id);
 
         axios
-          .delete('http://127.0.0.1:5000/panier/'+beer.id+'/1',this.config)
+          .delete('http://127.0.0.1:5000/panier/'+beer.id+'/'+token["user_id"],this.config)
           .catch( error=>{
             alert(error)
           })
       });
-      window.location.reload()
+      this.beers=[];
     }
+
   },
   async beforeMount(){
+    if(!localStorage.getItem("token")){
+      alert("Veuillez vous connecter avant d'accèder à nos bières")
+      this.$router.push({name:'Login'})
+      return
+    }
+
+    let token = VueJwtDecode.decode(localStorage.getItem("token"))
+
     try{
-      await axios.get('http://127.0.0.1:5000/panier/1',this.config)
+      await axios.get('http://127.0.0.1:5000/panier/'+token["user_id"],this.config)
     .then(res => {
         this.beersPanier = res.data
     })

@@ -29,6 +29,7 @@
 
 <script>
 import axios from 'axios';
+import VueJwtDecode from 'vue-jwt-decode'
 export default {
   name: 'BeerList',
   data(){
@@ -44,14 +45,14 @@ export default {
   },
   methods:{
     removeStock(beer){
-
+        let token = VueJwtDecode.decode(localStorage.getItem("token"))
         if(localStorage.getItem(beer.id)==null){
           localStorage.setItem(beer.id,1);
 
            axios
             .post('http://127.0.0.1:5000/panier',{
               beer_id:beer.id,
-              user_id:1,
+              user_id:token["user_id"],
               quantite:localStorage.getItem(beer.id)
             },this.config)
             .then(res => {
@@ -64,9 +65,10 @@ export default {
 
         }else{
           localStorage.setItem(beer.id,parseInt(localStorage.getItem(beer.id))+1);
+          
 
           axios
-            .put('http://127.0.0.1:5000/panier/'+beer.id+'/1',{
+            .put('http://127.0.0.1:5000/panier/'+beer.id+'/'+token["user_id"],{
               beer_id:beer.id,
               user_id:1,
               quantite:localStorage.getItem(beer.id)
@@ -81,11 +83,12 @@ export default {
         }
     },
     addStock(beer){
+        let token = VueJwtDecode.decode(localStorage.getItem("token"))
         if(parseInt(localStorage.getItem(beer.id))-1==0){
           localStorage.removeItem(beer.id);
 
           axios
-            .delete('http://127.0.0.1:5000/panier/'+beer.id+'/1',this.config)
+            .delete('http://127.0.0.1:5000/panier/'+beer.id+'/'+token["user_id"],this.config)
             .then(res => {
               this.$forceUpdate()
                 
@@ -95,9 +98,9 @@ export default {
             })
         }else{
           localStorage.setItem(beer.id,parseInt(localStorage.getItem(beer.id))-1);
-
+          
           axios
-            .put('http://127.0.0.1:5000/panier/'+beer.id+'/1',{
+            .put('http://127.0.0.1:5000/panier/'+beer.id+'/'+token["user_id"],{
               beer_id:beer.id,
               user_id:1,
               quantite:localStorage.getItem(beer.id)
@@ -124,11 +127,31 @@ export default {
       return localStorage.getItem(beer.id);
     }
   },
-  beforeMount(){
+  async beforeMount(){
+    if(!localStorage.getItem("token")){
+      alert("Veuillez vous connecter avant d'accèder à nos bières")
+      this.$router.push({name:'Login'})
+      return
+    }
+    
     try{
-      axios.get('http://127.0.0.1:5000/beers',this.config)
+      await axios.get('http://127.0.0.1:5000/beers',this.config)
+      .then(res => {
+          this.beers = res.data
+      })
+      .catch( error=>{
+        alert("Erreur de chargement des données.")
+      })
+    }catch(e){
+      console.log(e)
+    } 
+
+    let token = VueJwtDecode.decode(localStorage.getItem("token"))
+
+    try{
+      await axios.get('http://127.0.0.1:5000/panier/'+token["user_id"],this.config)
     .then(res => {
-        this.beers = res.data
+        this.beersPanier = res.data
     })
     .catch( error=>{
       alert("Erreur de chargement des données.")
@@ -136,6 +159,45 @@ export default {
     }catch(e){
       console.log(e)
     }  
+  
+    // this.beers.forEach(beer=>{
+    //   this.beersPanier.forEach(item => {
+    //     if(beer.id==item.beer_id){
+    //       if(beer.stock<=item.quantite){
+    //         localStorage.setItem(item.beer_id,item.quantite)
+    //       }
+    //       else{
+    //         let token = VueJwtDecode.decode(localStorage.getItem("token"));
+    //         axios
+    //           .delete('http://127.0.0.1:5000/panier/'+beer.id+'/'+token["user_id"],this.config)
+    //           .catch( error=>{
+    //             alert(error)
+    //           })
+    //         }
+    //       }
+    //     });
+    //   });
+    // this.$forceUpdate()
+
+    this.beersPanier.forEach(item => {
+      this.beers.forEach(beer=>{
+        if(item.beer_id == beer.id){
+          if(beer.stock < item.quantite){
+            let token = VueJwtDecode.decode(localStorage.getItem("token"));
+            axios
+              .delete('http://127.0.0.1:5000/panier/'+beer.id+'/'+token["user_id"],this.config)
+              .catch( error=>{
+                alert(error)
+              })
+          }else {
+            localStorage.setItem(item.beer_id,item.quantite)
+          }
+        }
+      })
+      
+      this.$forceUpdate()
+    });
+
   }
 }
 </script>

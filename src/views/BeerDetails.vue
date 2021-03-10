@@ -30,6 +30,12 @@ export default {
     },
     
     beforeMount(){
+
+        if(!localStorage.getItem("token")){
+            alert("Veuillez vous connecter avant d'accèder à nos bières")
+            this.$router.push({name:'Login'})
+            return
+        }
         axios
         .get('http://127.0.0.1:5000/beer/'+this.$route.params.id,this.config).then(res=>{
             this.beerDetail = res.data
